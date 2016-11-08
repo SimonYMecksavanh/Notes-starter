@@ -1,6 +1,7 @@
 package starter.ca.qc.johnabbott.cs.cs616.starter.notes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,12 +29,19 @@ import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.Note;
  */
 public class NoteListFragment extends Fragment {
 
+    public interface OnNoteChosen{
+        void onNoteChosen(Note note);
+    }
+
     private ListView notes;
     private Spinner spinner;
     private ArrayAdapter<Note> adapter;
+    private OnNoteChosen listener;
 
     public NoteListFragment() {
     }
+
+    public void setOnNoteChosenListener()
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -151,7 +159,13 @@ public class NoteListFragment extends Fragment {
         notes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), adapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getContext(), adapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+
+                if (listener != null)
+                    listener.onNoteChosen(adapter.getItem(position).getId());
+               // Intent intent = new Intent(getContext(), NoteActivity.class);
+                //intent.putExtra("ID", adapter.getItem(position).getId());
+               // startActivityForResult(intent, 123);
 
             }
         });
@@ -207,5 +221,10 @@ public class NoteListFragment extends Fragment {
             return getItem(position).getId(); //Use Note IDs }
         }
     }
+
+    public void refresh(){
+
+    }
+
 
 }

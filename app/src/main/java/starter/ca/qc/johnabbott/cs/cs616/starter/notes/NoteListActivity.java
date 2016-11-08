@@ -1,5 +1,6 @@
 package starter.ca.qc.johnabbott.cs.cs616.starter.notes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,11 +23,14 @@ public class NoteListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                startActivityForResult(intent, 123);
             }
         });
     }
+
+ //   @Override
+ //   protected void onActivityResult()
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

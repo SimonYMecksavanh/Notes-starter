@@ -16,6 +16,7 @@ import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.Note;
  */
 public class NoteFragment extends Fragment {
 
+    private Note note;
     private EditText title;
 
 
@@ -28,12 +29,24 @@ public class NoteFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_note, container, false);
 
         title = (EditText) root.findViewById(R.id.title_EditText);
-
+        note = null;
         return root;
     }
 
     public Note getNote() {
-        return new Note(title.getText().toString(), "", -1, false, null, new Date());
+        if(note == null)
+            note = new Note(title.getText().toString(), "", -1, false, null, new Date());
+        else{
+            note.setTitle(title.getText().toString());
+        }
+
+        return note;
+
+    }
+
+    public void load(Note note) {
+        this.note = note;
+        title.setText(note.getTitle());
     }
 }
 
