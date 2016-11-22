@@ -41,7 +41,7 @@ public class NoteListFragment extends Fragment {
     public NoteListFragment() {
     }
 
-    public void setOnNoteChosenListener()
+   // public void setOnNoteChosenListener();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -161,8 +161,8 @@ public class NoteListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                // Toast.makeText(getContext(), adapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
 
-                if (listener != null)
-                    listener.onNoteChosen(adapter.getItem(position).getId());
+              //  if (listener != null)
+               //     listener.onNoteChosen(adapter.getItem(position).getId());
                // Intent intent = new Intent(getContext(), NoteActivity.class);
                 //intent.putExtra("ID", adapter.getItem(position).getId());
                // startActivityForResult(intent, 123);
