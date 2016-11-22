@@ -1,4 +1,4 @@
-package ca.qc.johnabbott.cs.cs616.notes.model.server;
+package starter.ca.qc.johnabbott.cs.cs616.starter.notes.server;
 
 /**
  * Created by ian on 2016-11-01.

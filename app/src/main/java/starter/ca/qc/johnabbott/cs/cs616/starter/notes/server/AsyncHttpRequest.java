@@ -1,4 +1,4 @@
-package ca.qc.johnabbott.cs.cs616.notes.model.server;
+package starter.ca.qc.johnabbott.cs.cs616.starter.notes.server;
 
 import android.os.AsyncTask;
 
@@ -13,6 +13,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+
+
 
 /**
  * Performs an asynchronous HTTP request and reports the progress and result, or any error, using
