@@ -41,7 +41,10 @@ public class NoteListFragment extends Fragment {
     public NoteListFragment() {
     }
 
-   // public void setOnNoteChosenListener();
+    public void setOnNoteChosenListener(OnNoteChosen listener) {
+        this.listener = listener;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,6 +55,8 @@ public class NoteListFragment extends Fragment {
         //Get the ListView
         notes = (ListView) root.findViewById(R.id.notes_ListView);
         spinner = (Spinner) root.findViewById(R.id.sort_Spinner);
+
+        refreshNotes();
 
         //Populate spinner
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource( this.getContext(),
@@ -227,4 +232,34 @@ public class NoteListFragment extends Fragment {
     }
 
 
+    public void refreshNotes() {
+
+        ArrayAdapter<Note> noteAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
+
+        DatabaseHandler dbh = new DatabaseHandler(getContext());
+        final List<Note> data;
+        try {
+            data = dbh.getNoteTable().readAll();
+            noteAdapter.addAll(data);
+            notes.setAdapter(noteAdapter);
+
+            notes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    //Toast.makeText(getContext(), data.get(i).toString(), Toast.LENGTH_LONG).show();
+
+                    // an Event!
+                    if(listener != null)
+                        listener.onNoteChosen(data.get(i));
+
+                }
+            });
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }

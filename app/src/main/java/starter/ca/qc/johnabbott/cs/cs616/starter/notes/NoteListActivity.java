@@ -10,7 +10,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.Note;
+
 public class NoteListActivity extends AppCompatActivity {
+
+    private static final int LAUNCH_CREATE_MODE = 0;
+    private static final int LAUNCH_EDIT_MODE = 1;
+
+    private NoteListFragment noteListFragment;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +31,22 @@ public class NoteListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // launch the NoteActivity
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
-                startActivityForResult(intent, 123);
+                startActivityForResult(intent, LAUNCH_CREATE_MODE);
+            }
+        });
+
+        // get a reference to the note list fragment
+        noteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentById(R.id.note_list_fragment);
+
+        // when a note is chosen, start the Note editor with this note
+        noteListFragment.setOnNoteChosenListener(new NoteListFragment.OnNoteChosen() {
+            @Override
+            public void onNoteChosen(Note note) {
+                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                intent.putExtra(NoteActivity.params.ID, note.getId());
+                startActivityForResult(intent, LAUNCH_EDIT_MODE);
             }
         });
     }

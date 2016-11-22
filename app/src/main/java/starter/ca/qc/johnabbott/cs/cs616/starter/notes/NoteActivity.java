@@ -17,6 +17,16 @@ import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.Note;
 
 public class NoteActivity extends AppCompatActivity {
 
+    public static class params {
+        public static final String ID = "ID";
+
+        // make params non-instantiable
+        private params() {}
+    }
+
+    private NoteFragment noteFragment;
+    private boolean inEditMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,28 +34,33 @@ public class NoteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        long id = intent.getLongExtra("ID", -1);
+        noteFragment = (NoteFragment) getSupportFragmentManager().findFragmentById(R.id.note_Fragment);
 
-        if(id >= 0){
-            DatabaseHandler dbh = new DatabaseHandler(this);
+        // check the launching intent to determine the mode of use
+        Intent intent = getIntent();
+
+        // have this activity been launched for editing
+        if(intent.hasExtra(params.ID)) {
+
+            // set the fragment to edit mode
+            inEditMode = true;
+
+            // get note from DB and load it
+            long id = intent.getLongExtra(params.ID, -1);
+            Note note = null;
             try {
-                Note note = dbh.getNoteTable().read(id);
-                NoteFragment noteFragment = (NoteFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment);
-                noteFragment.load(note);
-            } catch (DatabaseException e) {
+                DatabaseHandler dbh = new DatabaseHandler(this);
+                note = dbh.getNoteTable().read(id);
+            }
+            catch (DatabaseException e) {
                 e.printStackTrace();
             }
-        }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+            // load the fragment
+            noteFragment.loadNote(note);
+        }
+        else
+            inEditMode = false;
     }
 
     @Override
@@ -67,20 +82,19 @@ public class NoteActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_save) {
-            NoteFragment frag = (NoteFragment) getSupportFragmentManager().findFragmentById(R.id.note_fragment);
 
-            Note note = frag.getNote();
-           // Log.d("DEBUG", frag.getNote().toString());
-
+            // edit or update the note as needed.
             DatabaseHandler dbh = new DatabaseHandler(this);
-
             try {
-                if(note.getId() >= 0)
-                    dbh.getNoteTable().update(frag.getNote());
+                if(inEditMode)
+                    dbh.getNoteTable().update(noteFragment.getNote());
                 else
-                    dbh.getNoteTable().create(frag.getNote());
+                    dbh.getNoteTable().create(noteFragment.getNote());
+
+                // return success
                 setResult(RESULT_OK);
                 finish();
+
             } catch (DatabaseException e) {
                 e.printStackTrace();
             }
