@@ -35,6 +35,7 @@ import starter.ca.qc.johnabbott.cs.cs616.starter.notes.server.HttpResponse;
  */
 public class NoteListFragment extends Fragment {
 
+    //private int i;
     public interface OnNoteChosen{
         void onNoteChosen(Note note);
     }
