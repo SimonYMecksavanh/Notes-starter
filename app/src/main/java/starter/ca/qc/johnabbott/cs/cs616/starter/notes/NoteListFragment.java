@@ -102,7 +102,7 @@ public class NoteListFragment extends Fragment {
 
                 }
             });
-            task.execute();
+           // task.execute();
             adapter.addAll(data);
 
             //Set up the spinner for sorting
