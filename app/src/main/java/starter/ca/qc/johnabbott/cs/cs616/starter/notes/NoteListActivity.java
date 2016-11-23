@@ -9,8 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.Note;
+
+import static java.security.AccessController.getContext;
 
 public class NoteListActivity extends AppCompatActivity {
 
@@ -37,8 +40,13 @@ public class NoteListActivity extends AppCompatActivity {
             }
         });
 
+        Intent loginIntent = getIntent();
+        String noteListUrl = loginIntent.getStringExtra("userUrl");
+        Toast.makeText(this, noteListUrl.toString(), Toast.LENGTH_LONG).show();
+
         // get a reference to the note list fragment
         noteListFragment = (NoteListFragment) getSupportFragmentManager().findFragmentById(R.id.note_list_fragment);
+        noteListFragment.setUrl(noteListUrl);
 
         // when a note is chosen, start the Note editor with this note
         noteListFragment.setOnNoteChosenListener(new NoteListFragment.OnNoteChosen() {

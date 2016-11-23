@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -23,6 +25,10 @@ import java.util.List;
 import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.DatabaseException;
 import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.DatabaseHandler;
 import starter.ca.qc.johnabbott.cs.cs616.starter.notes.model.Note;
+//import starter.ca.qc.johnabbott.cs.cs616.starter.notes.server.Note;
+import starter.ca.qc.johnabbott.cs.cs616.starter.notes.server.AsyncHttpRequest;
+import starter.ca.qc.johnabbott.cs.cs616.starter.notes.server.HttpProgress;
+import starter.ca.qc.johnabbott.cs.cs616.starter.notes.server.HttpResponse;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -37,6 +43,7 @@ public class NoteListFragment extends Fragment {
     private Spinner spinner;
     private ArrayAdapter<Note> adapter;
     private OnNoteChosen listener;
+    private String url;
 
     public NoteListFragment() {
     }
@@ -76,6 +83,26 @@ public class NoteListFragment extends Fragment {
         try{
             //Add the data to the list
             data = dbh.getNoteTable().readAll();
+            AsyncHttpRequest task = new AsyncHttpRequest(url, AsyncHttpRequest.Method.GET);
+            task.setOnResponseListener(new AsyncHttpRequest.OnResponse() {
+                @Override
+                public void onResult(HttpResponse response) {
+                    if(response.getStatus() == 200){
+                        //List<Note> data = Arrays.asList(Note.parseArray(response.getBody()));
+                    }
+                }
+
+                @Override
+                public void onProgress(HttpProgress progress) {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+            });
+            task.execute();
             adapter.addAll(data);
 
             //Set up the spinner for sorting
@@ -88,10 +115,10 @@ public class NoteListFragment extends Fragment {
                     //Sort notes by their title Z -> A
                     if (selectedItem.equals("Title")) {
                         Collections.sort(data, new Comparator<Note>() {
-
                             @Override
                             public int compare(Note o1, Note o2) {
                                 return o2.getTitle().compareTo(o1.getTitle());
+
                             }
                         });
                     }
@@ -227,11 +254,6 @@ public class NoteListFragment extends Fragment {
         }
     }
 
-    public void refresh(){
-
-    }
-
-
     public void refreshNotes() {
 
         ArrayAdapter<Note> noteAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1);
@@ -261,5 +283,9 @@ public class NoteListFragment extends Fragment {
         }
 
 
+    }
+
+    public void setUrl (String url){
+        this.url = url;
     }
 }
